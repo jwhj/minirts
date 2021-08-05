@@ -167,6 +167,15 @@ class Executor(nn.Module):
                 self.args.word_emb_dropout,
                 padding_idx,
             )
+        elif self.args.inst_encoder_type == 'bert':
+            encoder = BERTInstructionEncoder(
+                dict_size,
+                self.args.rnn_word_emb_dim,
+                self.args.word_emb_dropout,
+                self.args.inst_hid_dim,
+                padding_idx,
+                self.inst_dict
+            )
         elif self.args.inst_encoder_type == 'lstm':
             encoder = LSTMInstructionEncoder(
                 dict_size,

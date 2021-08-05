@@ -29,7 +29,7 @@ def create_game(num_games, ai1_option, ai2_option, game_option, *, act_name='act
     print('game option:')
     print(game_option.info())
 
-    batchsize = min(32, max(num_games // 2, 1))
+    batchsize = min(16, max(num_games // 2, 1))
     act_dc = tube.DataChannel(act_name, batchsize, 1)
     context = tube.Context()
     idx2utype = [
@@ -99,8 +99,8 @@ def parse_args():
     # model
     # 21.4 for best_rnn_executor
     # 25.2 for best_bow_executor
-    parser.add_argument('--coach_path', type=str, default=best_rnn_coach)
-    parser.add_argument('--model_path', type=str, default=best_rnn_executor)
+    parser.add_argument('--coach_path', type=str, required=True)
+    parser.add_argument('--model_path', type=str, required=True)
 
     args = parser.parse_args()
     return args

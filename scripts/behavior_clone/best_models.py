@@ -16,9 +16,11 @@ best_executors = {
     'bow': 'executor_bow.pt',
     'onehot': 'executor_onehot.pt',
     'zero': 'executor_zero.pt',
+    'repro_rnn':'../scripts/behavior_clone/saved_models/executor_rnn/best_checkpoint.pt',
+    'bert': '../scripts/behavior_clone/saved_models/test/best_checkpoint.pt'
 }
 for key, val in best_executors.items():
-    best_executors[key] = os.path.join(model_root, val)
+    best_executors[key] = os.path.abspath(os.path.join(model_root, val))
 
 # best_executors['zero'] = best_zero_executor
 
@@ -34,9 +36,11 @@ best_coaches = {
     'onehot50': 'coach_onehot50.pt',
     'onehot250': 'coach_onehot250.pt',
     'onehot500': 'coach_onehot500.pt',
+    'repro_rnn500': '../scripts/behavior_clone/saved_models/coach_rnn500/best_checkpoint.pt',
+    'repro_bow500': '../scripts/behavior_clone/saved_models/coach_bow500/best_checkpoint.pt'
 }
 for key, val in best_coaches.items():
-    best_coaches[key]= os.path.join(model_root, val)
+    best_coaches[key]= os.path.abspath(os.path.join(model_root, val))
 
 
 if __name__ == '__main__':

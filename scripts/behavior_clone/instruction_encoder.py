@@ -7,6 +7,7 @@
 import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
+from transformers import BertModel, BertTokenizer
 
 
 class ZeroInstructionEncoder(nn.Module):
@@ -55,6 +56,25 @@ class MeanBOWInstructionEncoder(nn.Module):
         e = self.dropout(e)
         bow = e.mean(dim=1)
         return bow
+
+
+class BERTInstructionEncoder(nn.Module):
+    bert: BertModel
+    def __init__(self, dict_size, emb_size, emb_dropout, out_size, padding_idx, inst_dict):
+        super().__init__()
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        self.inst_dict = inst_dict
+        self.out_dim = self.bert.config.hidden_size
+        self.padding_idx = padding_idx
+
+    def forward(self, x, sizes):
+        device = x.device
+        x = self.inst_dict.deparse(x)
+        x = self.tokenizer(x, return_tensors='pt', truncation=True, padding=True, max_length=self.inst_dict._max_sentence_length + 2)
+        x = x.to(device)
+        output = self.bert(x['input_ids'], attention_mask=x['attention_mask'])
+        return output.pooler_output
 
 
 class LSTMInstructionEncoder(nn.Module):
@@ -173,4 +193,4 @@ class HistInstructionEncoder(nn.Module):
 
 
 def is_word_based(name):
-    return name in ('random', 'bow', 'lstm', 'gru', 'zero')
+    return name in ('random', 'bow', 'bert', 'lstm', 'gru', 'zero')

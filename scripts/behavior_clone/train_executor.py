@@ -156,15 +156,20 @@ def main():
         options.max_num_prev_cmds,
         inst_dict=inst_dict,
         word_based=is_word_based(args['executor'].inst_encoder_type))
+    
+    params=[
+        {'params': [p for n, p in model.named_parameters() if 'bert' not in n]},
+        {'params': [p for n, p in model.named_parameters() if 'bert' in n], 'lr': options.lr/100}
+    ]
 
     if options.optim == 'adamax':
         optimizer = torch.optim.Adamax(
-            model.parameters(),
+            params,
             lr=options.lr,
             betas=(options.beta1, options.beta2))
     elif options.optim == 'adam':
         optimizer = torch.optim.Adam(
-            model.parameters(),
+            params,
             lr=options.lr,
             betas=(options.beta1, options.beta2))
     else:
