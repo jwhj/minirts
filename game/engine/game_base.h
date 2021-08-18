@@ -9,6 +9,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <atomic>
+#include <mutex>
 
 #include "engine/common.h"
 #include "engine/game_state_ext.h"
@@ -28,7 +30,8 @@ class RTSGame : public tube::EnvThread {
  public:
   RTSGame(const RTSGameOption& option)
       : option_(option)
-      , state_(option) {
+      , state_(option)
+      , terminated_(false) {
   }
 
   RTSGame(const RTSGame&) = delete;
@@ -73,6 +76,13 @@ class RTSGame : public tube::EnvThread {
     }
   }
 
+  void terminate() {
+    terminated_.store(true);
+  }
+  void join() {
+    const std::lock_guard<std::mutex> lock(running);
+  }
+
  private:
   void reset() {
     state_.Reset();
@@ -82,9 +92,11 @@ class RTSGame : public tube::EnvThread {
   }
 
   void oneGame() {
+    const std::lock_guard<std::mutex> lock(running);
     state_.Init();
     // int step__ = 0;
-    while (true) {
+    bool flag = false;
+    while (!(flag = terminated_.load())) {
       // step__++;
       // std::cout << "step: " << step__ << std::endl;
       if (step() != GAME_NORMAL) {
@@ -92,7 +104,9 @@ class RTSGame : public tube::EnvThread {
       }
     }
     // Send message to AIs.
-    act(false);
+    if (!flag){
+      act(false);
+    }
     gameEnd();
     state_.Finalize();
   }
@@ -137,4 +151,6 @@ class RTSGame : public tube::EnvThread {
   RTSStateExtend state_;
   std::vector<std::shared_ptr<AI>> bots_;
   std::unique_ptr<Replayer> spectator_;
+  std::atomic<bool> terminated_;
+  std::mutex running;
 };
