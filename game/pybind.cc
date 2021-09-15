@@ -110,6 +110,12 @@ PYBIND11_MODULE(minirts, m) {
            std::shared_ptr<tube::DataChannel>  // actDc
            >());
 
+  py::class_<SimpleAI, AI, std::shared_ptr<SimpleAI>>(m, "SimpleAI")
+      .def(py::init<
+           const AIOption&,
+           int,
+           UnitType>());
+
   py::class_<MediumAI, AI, std::shared_ptr<MediumAI>>(m, "MediumAI")
       .def(py::init<
            const AIOption&,
