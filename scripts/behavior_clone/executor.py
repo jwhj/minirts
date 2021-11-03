@@ -382,7 +382,7 @@ class Executor(nn.Module):
         params = pickle.load(open(model_file + '.params', 'rb'))
         print(params)
         model = cls(**params)
-        model.load_state_dict(torch.load(model_file))
+        model.load_state_dict(torch.load(model_file), strict=False)
         return model
 
     def forward(self, batch):
