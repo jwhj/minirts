@@ -11,6 +11,10 @@ function random.get_rng(seed)
   local __seed = seed
 
   function fast_random(min, max)
+    if __seed == 49859
+    then
+      __seed = 49860
+    end
     __seed = (__seed * 1009 + 9007) % 65537
     num = (__seed % (max - min + 1)) + min
     return num
