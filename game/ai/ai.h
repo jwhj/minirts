@@ -42,7 +42,8 @@ class AI {
 
   // Given the current state, perform action and send the action to _a;
   // Return false if this procedure fails.
-  virtual bool act(const RTSStateExtend&, RTSAction*) {
+  virtual bool act(const RTSStateExtend&, RTSAction* action) {
+    action->Init(getId(), 0, RTSAction::RULE_BASED); // Important when loading replay using dummy AI
     return true;
   }
 
