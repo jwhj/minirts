@@ -46,7 +46,8 @@ bool StateDumper::processInstruction(const CmdBPtr& cmd) {
   return false;
 }
 
-bool StateDumper::act(const RTSStateExtend& state, RTSAction*) {
+bool StateDumper::act(const RTSStateExtend& state, RTSAction* action) {
+  action->Init(getId(), 0, RTSAction::RULE_BASED); // Important when loading replay using dumper AI
   Tick tick = state.GetTick();
   if (tick + 1 < option_.fs) {
     // before the first step, nothing to do
