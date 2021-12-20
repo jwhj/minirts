@@ -10,18 +10,23 @@ import subprocess
 
 replay = sys.argv[1]
 lua_path = replay + '.lua'
+method = 'teamreplay'
 
 assert os.path.exists(replay)
-assert os.path.exists(lua_path)
+# assert os.path.exists(lua_path)
 
 binary = os.path.abspath('../../build/minirts-backend')
 player1 = 'dummy,fs=1'
 player2 = 'dummy,fs=1'
+if not os.path.exists(lua_path):
+    print('lua_path %s not exist, use %s instead' % (lua_path, os.path.join(os.path.dirname(binary), '?.lua')))
+    lua_path = os.path.dirname(binary)
+    method = 'replay'
 
 cmd = [
     'LUA_PATH=%s' % (os.path.join(lua_path, '?.lua')),
     binary,
-    'teamreplay',
+    method,
     '--load_replay %s' % replay,
     '--players "%s;%s"' % (player1, player2),
     '--lua_files %s' % lua_path,
