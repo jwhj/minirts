@@ -20,7 +20,7 @@ from utils import get_all_files
 
 
 def process_all(root, output):
-    assert formatted or compact
+    # assert formatted or compact
 
     src_files = get_all_files(root, '.json')
 
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     if args.dest is None:
         args.dest = args.src + '_processed'
 
-    process_all(args.src, args.dest, True, False)
+    process_all(args.src, args.dest)
