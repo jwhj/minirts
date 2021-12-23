@@ -337,8 +337,8 @@ class ConvGlobEncoder(nn.Module):
             'sum_army': SumGlobReducer.sum(
                 army_feat, batch['my_units']['num_units']),
             'sum_enemy': SumGlobReducer.sum(
-                enemy_feat, batch['my_units']['num_units']),
+                enemy_feat, batch['enemy_units']['num_units']),
             'sum_resource': SumGlobReducer.sum(
-                resource_feat, batch['my_units']['num_units']),
+                resource_feat, batch['resource_units']['num_units']),
         }
         return features
