@@ -18,19 +18,19 @@ python train_executor_with_unit_cont_recurrent.py \
   --other_out_dim 128 \
   --money_hid_layer 1 \
   --conv_dropout 0.1 \
-  --rnn_word_emb_dim 128 \
-  --word_emb_dropout 0 \
+  --rnn_word_emb_dim 64 \
+  --word_emb_dropout 0.25 \
   --inst_hid_dim 128 \
-  --inst_encoder_type zero \
-  --model_folder saved_models/executor_zero_with_cont_recurrent \
+  --inst_encoder_type lstm \
+  --model_folder saved_models/executor_rnn_with_cont_recurrent \
   --batch_size 32 \
   --gpu 0 \
   --grad_clip 0.5 \
   --lr 0.002 \
   --optim adamax \
   --epochs 50 \
-  --use_hist_inst 0 \
-  --pos_dim 32 \
+  --use_hist_inst 1 \
+  --pos_dim 16 \
   --prev_cmd_rnn 1 \
   --top_num_inst -1 \
-  --seed 3 \
+  --seed 1 \

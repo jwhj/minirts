@@ -35,9 +35,11 @@ def train(model, device, optimizer, grad_clip, data_loader, epoch, stat):
         # loss, all_losses = model(batch)
         # print(loss.mean())
         # print(all_losses)
-        loss = loss.mean()
+        # loss = loss.mean()
 
-        loss.backward()
+        # loss.backward()
+        if batch_idx in [0, 1]:
+            print('Now updating, batch idx = {}, batch size = {}'.format(batch_idx, len(batch['traj_lens'])))
         if grad_clip > 0:
             nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
 

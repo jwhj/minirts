@@ -14,6 +14,10 @@ def to_device(batch, device):
         return batch.to(device).detach()
     elif isinstance(batch, dict):
         return {key : to_device(batch[key], device) for key in batch}
+    elif isinstance(batch, list):
+        return [to_device(elem, device) for elem in batch]
+    elif isinstance(batch, int) or isinstance(batch, int):
+        return batch
     else:
         assert False, 'unsupported type: %s' % type(batch)
 
