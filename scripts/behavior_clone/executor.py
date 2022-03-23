@@ -23,28 +23,38 @@ def parse_hist_inst(inst_dict, hist_inst, hist_inst_diff, inst, inst_len, inst_c
 
     parsed_hist = []
     hist_len = []
-    hist_diff = []
+    # hist_diff = []
     bsize, num_inst = hist_inst.size()
+    hist_diff = torch.zeros_like(hist_inst_diff)
+    inst_cont = inst_cont.tolist()
+    hist_inst = hist_inst.tolist()
+
     for bid in range(bsize):
         parsed_list = []
-        diff_list = []
+        # diff_list = []
         l_list = []
 
         j = 0
-        new_inst = (inst_cont[bid].item() == 0)
+        new_inst = (inst_cont[bid][0] == 0)
         if new_inst:
             j = 1
+            hist_diff[bid, :-1] = hist_inst_diff[bid, 1:]
+        else:
+            hist_diff[bid] = hist_inst_diff[bid]
+
         while j < num_inst:
             idx = hist_inst[bid][j]
             if idx < 0:
                 idx = inst_dict.pad_inst_idx
             if word_based:
-                parsed, l = inst_dict.parse(inst_dict.get_inst(idx), True)
+                if idx not in inst_dict.parse_cache:
+                    inst_dict.parse_cache[idx] = (inst_dict.parse(inst_dict.get_inst(idx), True))
+                parsed, l = inst_dict.parse_cache[idx]
             else:
                 parsed, l = idx, 0
             parsed_list.append(parsed)
             l_list.append(l)
-            diff_list.append(hist_inst_diff[bid][j].item())
+            # diff_list.append(hist_inst_diff[bid][j].item())
             j += 1
 
         if new_inst:
@@ -54,7 +64,7 @@ def parse_hist_inst(inst_dict, hist_inst, hist_inst_diff, inst, inst_len, inst_c
                 parsed_list.append(inst[bid].item())
 
             l_list.append(inst_len[bid].item())
-            diff_list.append(0)
+            # diff_list.append(0)
 
         # import pprint
         # pprint.pprint(parsed_list)
@@ -63,12 +73,12 @@ def parse_hist_inst(inst_dict, hist_inst, hist_inst_diff, inst, inst_len, inst_c
 
         parsed_hist.append(parsed_list)
         hist_len.append(l_list)
-        hist_diff.append(diff_list)
+        # hist_diff.append(diff_list)
 
     parsed_hist = torch.LongTensor(parsed_hist).to(device)
     # print(parsed_hist)
     hist_len = torch.LongTensor(hist_len).to(device)
-    hist_diff = torch.LongTensor(hist_diff).to(device)
+    # hist_diff = torch.LongTensor(hist_diff).to(device)
     return parsed_hist, hist_len, hist_diff
 
 
@@ -221,6 +231,8 @@ class Executor(nn.Module):
         self.num_cmd_type = num_cmd_type
 
         self.inst_dict = self._load_inst_dict(self.args.inst_dict_path)
+        if not hasattr(self.inst_dict, '_inst_cache'):
+            self.inst_dict.init_inst_cache()
         self.inst_encoder = self._create_inst_encoder()
 
         self.conv_encoder = ConvGlobEncoder(

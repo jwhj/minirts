@@ -120,6 +120,8 @@ class ConvRnnCoach(nn.Module):
         self.args.inst_dict_path = self.args.inst_dict_path.replace(
             'scratch/rts_data', 'rts-replays')
         self.inst_dict = self.load_inst_dict(self.args.inst_dict_path)
+        if not hasattr(self.inst_dict, '_inst_cache'):
+            self.inst_dict.init_inst_cache()
 
         self.prev_inst_encoder = LSTMInstructionEncoder(
             self.inst_dict.total_vocab_size,

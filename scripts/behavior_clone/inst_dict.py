@@ -47,6 +47,8 @@ class InstructionDict:
 
         self._corrections = corrections
         self._max_sentence_length = None
+        self._inst_cache = {}
+        self.parse_cache = {}
 
     @property
     def vocab_size(self):
@@ -88,6 +90,10 @@ class InstructionDict:
 
     def set_max_sentence_length(self, max_sentence_length):
         self._max_sentence_length = max_sentence_length
+    
+    def init_inst_cache(self):
+        self._inst_cache = {}
+        self.parse_cache = {}
 
     def _add_word(self, word):
         self._word2idx[word] = len(self._idx2word)
@@ -145,7 +151,10 @@ class InstructionDict:
             assert False
 
     def parse(self, inst, should_pad):
-        inst = correct_instruction(inst, self._corrections)
+        if inst not in self._inst_cache:
+            self._inst_cache[inst] = correct_instruction(inst, self._corrections)
+        inst = self._inst_cache[inst]
+        
         if len(inst) == 0:
             words = []
         else:
@@ -157,8 +166,11 @@ class InstructionDict:
         for word in words[ : self._max_sentence_length - 1]:
             tokens.append(self.get_word_idx(word))
 
-        while should_pad and len(tokens) < self._max_sentence_length:
-            tokens.append(self.pad_word_idx)
+        if should_pad and len(tokens) < self._max_sentence_length:
+            tokens += [self.pad_word_idx] * (self._max_sentence_length - len(tokens))
+
+        # while should_pad and len(tokens) < self._max_sentence_length:
+        #     tokens.append(self.pad_word_idx)
 
         return tokens, length
 

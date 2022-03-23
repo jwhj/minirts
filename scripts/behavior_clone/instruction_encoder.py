@@ -77,7 +77,7 @@ class LSTMInstructionEncoder(nn.Module):
         indexes = indexes.expand(indexes.size(0), 1, hs.size(2))
         h = hs.gather(1, indexes).squeeze(1)
         # h: [batch, out_size]
-        h = h * mask.float().unsqueeze(1)
+        h = h * mask.unsqueeze(1)
         return h
 
 
@@ -100,7 +100,7 @@ class GRUInstructionEncoder(nn.Module):
         indexes = indexes.expand(indexes.size(0), 1, hs.size(2))
         h = hs.gather(1, indexes).squeeze(1)
         # h: [batch, out_size]
-        h = h * mask.float().unsqueeze(1)
+        h = h * mask.unsqueeze(1)
         return h
 
 
@@ -139,19 +139,25 @@ class HistInstructionEncoder(nn.Module):
         sum_inst = hist_feat[:, -1]
         # print('sum_inst:', sum_inst.size())
 
-        num_army = army_feat.size(1)
-        hist_feat = hist_feat.unsqueeze(1).repeat(1, num_army, 1, 1)
+        # num_army = army_feat.size(1)
+        # hist_feat = hist_feat.unsqueeze(1).repeat(1, num_army, 1, 1)
 
         proj_army = self.proj(army_feat)
-        proj_army = proj_army.unsqueeze(2).repeat(1, 1, num_hist, 1)
+        # proj_army = proj_army.unsqueeze(2).repeat(1, 1, num_hist, 1)
+        dot_prod = torch.bmm(proj_army, hist_feat.transpose(-1, -2))
+        # dot_prod: [batch, num_army, num_hist]
 
         # print(hist_feat.size())
-        dot_prod = (proj_army * hist_feat).sum(3)
+        # dot_prod = (proj_army * hist_feat).sum(3)
         # dot_prod: [batch, num_army, num_hist]
         att_score = nn.functional.softmax(dot_prod, 2)
         # att_score: [batch, num_army, num_hist]
         # hist_feat: [batch, num_army, num_hist, hist_dim]
-        inst_feat = (att_score.unsqueeze(3) * hist_feat).sum(2)
+        # inst_feat = (att_score.unsqueeze(3) * hist_feat).sum(2)
+
+        inst_feat = torch.bmm(att_score, hist_feat)
+        # hist_feat: [batch, num_hist, hist_dim]
+
         # inst_feat: [batch, num_army, hist_dim]
         return inst_feat, sum_inst
 

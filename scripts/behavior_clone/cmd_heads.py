@@ -228,9 +228,10 @@ class DotMoveHead(nn.Module):
         assert globfeat is None and self.globfeat_dim == 0
         infeat = ufeat#, globfeat], 2)
         proj = self.net(infeat)
-        proj = proj.unsqueeze(2).repeat(1, 1, map_dim, 1)
-        mapfeat = mapfeat.unsqueeze(1).repeat(1, pnum_unit, 1, 1)
-        logit = (proj * mapfeat).sum(3) / self.norm
+        # proj = proj.unsqueeze(2).repeat(1, 1, map_dim, 1)
+        # mapfeat = mapfeat.unsqueeze(1).repeat(1, pnum_unit, 1, 1)
+        # logit = (proj * mapfeat).sum(3) / self.norm
+        logit = torch.bmm(proj, mapfeat.transpose(-1, -2)) / self.norm
         return logit
 
     def compute_loss(self, ufeat, mapfeat, globfeat, x, y, mask):
@@ -291,11 +292,12 @@ class DotAttackHead(nn.Module):
         infeat = ufeat
         # infeat [batch, pnum_unit, in_dim]
         proj = self.net(infeat)
-        proj = proj.unsqueeze(2).repeat(1, 1, pnum_enemy, 1)
+        # proj = proj.unsqueeze(2).repeat(1, 1, pnum_enemy, 1)
         # proj [batch, pnum_unit, pnum_enemy, efeat_dim]
-        efeat = efeat.unsqueeze(1).repeat(1, pnum_unit, 1, 1)
+        # efeat = efeat.unsqueeze(1).repeat(1, pnum_unit, 1, 1)
         # efeat [batch, pnum_unit, pnum_enemy, efeat_dim
-        logit = (proj * efeat).sum(3) / self.norm
+        # logit = (proj * efeat).sum(3) / self.norm
+        logit = torch.bmm(proj, efeat.transpose(-1, -2)) / self.norm
         # logit [batch, pnum_unit, pnum_enemy]
         enemy_mask = create_real_unit_mask(num_enemy, pnum_enemy)
         # enemy_mask [batch, pnum_enemy]
