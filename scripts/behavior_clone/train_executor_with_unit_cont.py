@@ -17,6 +17,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from dataset import BehaviorCloneDataset, merge_max_units
+
 # from executor import Executor
 sys.path.append(os.path.join(os.environ['MINIRTS_ROOT'], '../rl-minirts'))
 from models.single_action_inherit import ExecutorSingle as Executor
@@ -102,6 +103,8 @@ def get_main_parser():
     parser.add_argument('--resource_bin_size', type=int, default=50)
     parser.add_argument('--max_num_prev_cmds', type=int, default=25)
 
+    parser.add_argument('--use_lang_mixer', action='store_true')
+
     return parser
 
 
@@ -139,7 +142,12 @@ def main():
 
     common_utils.set_all_seeds(options.seed)
 
-    model = Executor(args['executor'], options.num_resource_bin).to(device)
+    model = Executor(
+        args['executor'],
+        options.num_resource_bin,
+        use_lang_mixer=options.use_lang_mixer,
+    ).to(device)
+    print('conv dropout: ', model.params['args'].conv_dropout)
     inst_dict = model.inst_dict
     print(model)
     # model = nn.DataParallel(model, [0, 1])
@@ -150,25 +158,25 @@ def main():
         options.resource_bin_size,
         options.max_num_prev_cmds,
         inst_dict=inst_dict,
-        word_based=is_word_based(args['executor'].inst_encoder_type))
+        word_based=is_word_based(args['executor'].inst_encoder_type),
+    )
     val_dataset = BehaviorCloneDataset(
         options.val_dataset,
         options.num_resource_bin,
         options.resource_bin_size,
         options.max_num_prev_cmds,
         inst_dict=inst_dict,
-        word_based=is_word_based(args['executor'].inst_encoder_type))
+        word_based=is_word_based(args['executor'].inst_encoder_type),
+    )
 
     if options.optim == 'adamax':
         optimizer = torch.optim.Adamax(
-            model.parameters(),
-            lr=options.lr,
-            betas=(options.beta1, options.beta2))
+            model.parameters(), lr=options.lr, betas=(options.beta1, options.beta2)
+        )
     elif options.optim == 'adam':
         optimizer = torch.optim.Adam(
-            model.parameters(),
-            lr=options.lr,
-            betas=(options.beta1, options.beta2))
+            model.parameters(), lr=options.lr, betas=(options.beta1, options.beta2)
+        )
     else:
         assert False, 'not supported'
 
@@ -176,14 +184,16 @@ def main():
         train_dataset,
         options.batch_size,
         shuffle=True,
-        num_workers=20, # if options.dev else 20,
-        pin_memory=(options.gpu >= 0))
+        num_workers=20,  # if options.dev else 20,
+        pin_memory=(options.gpu >= 0),
+    )
     val_loader = DataLoader(
         val_dataset,
         options.batch_size,
         shuffle=False,
-        num_workers=20, # if options.dev else 20,
-        pin_memory=(options.gpu >= 0))
+        num_workers=20,  # if options.dev else 20,
+        pin_memory=(options.gpu >= 0),
+    )
 
     best_eval_nll = float('inf')
     overfit_count = 0
@@ -192,7 +202,9 @@ def main():
     eval_stat = common_utils.MultiCounter(os.path.join(options.model_folder, 'eval'))
     for epoch in range(1, options.epochs + 1):
         train_stat.start_timer()
-        train(model, device, optimizer, options.grad_clip, train_loader, epoch, train_stat)
+        train(
+            model, device, optimizer, options.grad_clip, train_loader, epoch, train_stat
+        )
         train_stat.summary(epoch)
         train_stat.reset()
 
