@@ -71,7 +71,7 @@ PYBIND11_MODULE(minirts, m) {
       .def(py::init<const RTSGameOption&>())
       // .def("init_lua", &RTSGame::initLua)
       .def("add_bot", &RTSGame::addBot, py::keep_alive<1, 2>())
-      .def("add_default_spectator", &RTSGame::addDefaultSpectator);
+      .def("add_default_spectator", &RTSGame::addDefaultSpectator, py::arg("port") = 8002);
 
   py::class_<AI, std::shared_ptr<AI>>(m, "AI");
 

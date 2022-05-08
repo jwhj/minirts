@@ -51,9 +51,9 @@ class RTSGame : public tube::EnvThread {
     spectator_ = std::move(spectator);
   }
 
-  void addDefaultSpectator() {
+  void addDefaultSpectator(int port=8002) {
     assert(spectator_ == nullptr);
-    spectator_ = std::make_unique<TCPSpectator>("", 0, 8002);
+    spectator_ = std::make_unique<TCPSpectator>("", 0, port);
   }
 
   virtual void mainLoop() override {
