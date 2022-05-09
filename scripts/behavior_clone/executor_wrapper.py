@@ -32,12 +32,16 @@ class ExecutorWrapper(nn.Module):
         self.cheat = cheat
         self.prev_inst = ''
 
-    def _get_human_instruction(self, batch):
+    def _get_human_instruction(self, batch, inst_from_frontend=None):
         assert_eq(batch['prev_inst'].size(0), 1)
         device = batch['prev_inst'].device
 
-        inst = input('Please input your instruction\n')
-        # inst = 'build peasant'
+        if inst_from_frontend is None:
+            inst = input('Please input your instruction\n')
+            # inst = 'build peasant'
+        else:
+            inst = inst_from_frontend.get()
+            print(f'Instruction from frontend: {inst}')
 
         inst_idx = torch.zeros((1,)).long().to(device)
         inst_idx[0] = self.executor.inst_dict.get_inst_idx(inst)
@@ -62,9 +66,9 @@ class ExecutorWrapper(nn.Module):
             'raw_inst': raw_inst
         }
 
-        return inst, inst_len, inst_cont, reply
+        return inst, inst_len, inst_cont.unsqueeze(1), reply
 
-    def forward(self, batch):
+    def forward(self, batch, inst_from_frontend=None):
         if self.coach is not None:
             assert not self.coach.training
             if self.cheat:
@@ -76,7 +80,7 @@ class ExecutorWrapper(nn.Module):
             inst, inst_len, inst_cont, coach_reply = self.coach.sample(
                 coach_input, word_based)
         else:
-            inst, inst_len, inst_cont, coach_reply = self._get_human_instruction(batch)
+            inst, inst_len, inst_cont, coach_reply = self._get_human_instruction(batch, inst_from_frontend)
 
         assert not self.executor.training
         executor_input = self.executor.format_executor_input(
