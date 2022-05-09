@@ -1023,7 +1023,7 @@ var render = function (game) {
   resize();
 
   if (game.winner != -1) {
-    if (game.player_id == game.winner || (player_type == 'spectator' && game.player_id == 0)) {
+    if (game.player_id == game.winner || (player_type == 'spectator' && game.winner == 0)) {
       swal("Congratulations!", "You won the game!", "success");
     } else {
       swal("You lost!", "Thank you for playing our game, best of luck next time!", "error");
