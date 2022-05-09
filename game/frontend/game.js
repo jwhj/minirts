@@ -1023,7 +1023,7 @@ var render = function (game) {
   resize();
 
   if (game.winner != -1) {
-    if (game.player_id == game.winner) {
+    if (game.player_id == game.winner || (player_type == 'spectator' && game.player_id == 0)) {
       swal("Congratulations!", "You won the game!", "success");
     } else {
       swal("You lost!", "Thank you for playing our game, best of luck next time!", "error");
@@ -1619,7 +1619,7 @@ var start_game = function(player_type, port, mturk) {
       if (mturk) {
         window.dealer = new WebSocket('wss://' + window.host + ':/wss' + window.port);
       } else {
-        window.dealer = new WebSocket('ws://localhost:' + window.port);
+        window.dealer = new WebSocket('ws://' + location.hostname + ':' + window.port);
       }
       break;
     } catch (error) {
