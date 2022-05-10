@@ -22,8 +22,13 @@
                 Select instruction
                 <span class="caret"></span>
               </button>
+              <button class="btn btn-default" type="button" onclick="sendEmptyInst()">Send empty instruction</button>
+              <button class="btn btn-default" id="fow" type="button" onclick="toggle_fow()">
+                Fog of war: ON
+              </button>
               <ul id="select-inst" class="dropdown-menu" aria-labelledby="select-inst-btn">
                 <li><a href="#">mine</a></li>
+                <li><a href="#">all peasant mine</a></li>
                 <li><a href="#">build peasant</a></li>
                 <li><a href="#">attack</a></li>
                 <li><a href="#">defend</a></li>
@@ -32,10 +37,10 @@
                 <li><a href="#">build a barrack</a></li>
                 <li><a href="#">build a stable</a></li>
                 <li><a href="#">build a workshop</a></li>
-                <li><a href="#">build a guardtower</a></li>
+                <li><a href="#">build a guard tower</a></li>
                 <li><a href="#">build a town hall</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">build swordsman</a></li>
+                <li><a href="#">build swordman</a></li>
                 <li><a href="#">build spearman</a></li>
                 <li><a href="#">build cavalry</a></li>
                 <li><a href="#">build archer</a></li>
@@ -43,7 +48,7 @@
                 <li><a href="#">build catapult</a></li>
               </ul>
             </div>
-            <textarea id="user-input-inst" class="form-control" row="2"></textarea>
+            <textarea id="user-input-inst" class="form-control" row="2" placeholder="按下 enter 发送指令；不输入内容，直接按下 enter，可以重复上一条指令"></textarea>
             <label id="cmd_hint" style="font-size:16px; color:green; font-weight: bold;" >Please use your imagination to come up with creative orders and strategies. <br> If your partner takes ANY action you didn't order, use the orange button to warn them.</label>
             <label id="cmd_warn_label" style="font-weight: bold; font-size:16px; color:red; display: none;" >Your partner has marked that you are not following orders! Please only take actions <br> that you have been asked to do. Your task is to follow orders, not to win the game. <br> If you frequently do not follow orders, your work may be rejected!</label>
             <br>
@@ -80,7 +85,7 @@
             <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Finish Order
           </button>
     <!-- <script src="https://minirts.net/game/game.js?v=71" type="text/javascript"></script> -->
-    <script src="game.js?v=89" type="text/javascript"></script>
+    <script src="game_play.js?v=89" type="text/javascript"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type = "text/javascript">
       main();

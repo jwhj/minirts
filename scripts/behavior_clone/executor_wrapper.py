@@ -49,7 +49,9 @@ class ExecutorWrapper(nn.Module):
         if len(inst) == 0:
             # inst = batch['prev_inst']
             inst = self.prev_inst
-            inst_cont[0] = 1
+            # inst_cont[0] = 1
+        elif inst == 'null':
+            inst = ''
 
         self.prev_inst = inst
         raw_inst = convert_to_raw_instruction(inst, self.max_raw_chars)

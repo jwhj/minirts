@@ -1,4 +1,4 @@
-let port = Number(new URLSearchParams(location.href).get('port'))
+let port = Number(new URLSearchParams(location.search).get('port'))
 console.log(port)
 function passInstruction() {
     let el = document.querySelector('#user-input-inst')
@@ -12,6 +12,18 @@ function passInstruction() {
         body: JSON.stringify({
             port: port,
             inst: inst
+        })
+    });
+}
+function sendEmptyInst() {
+    fetch(`/pass_inst`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            port: port,
+            inst: 'null'
         })
     });
 }
