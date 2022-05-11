@@ -19,33 +19,33 @@
           <div class="form-group">
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" id="select-inst-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select instruction
+                选择指令
                 <span class="caret"></span>
               </button>
-              <button class="btn btn-default" type="button" onclick="sendEmptyInst()">Send empty instruction</button>
+              <button class="btn btn-default" type="button" onclick="sendEmptyInst()">发送空指令</button>
               <button class="btn btn-default" id="fow" type="button" onclick="toggle_fow()">
-                Fog of war: ON
+                战争迷雾: 开
               </button>
-              <ul id="select-inst" class="dropdown-menu" aria-labelledby="select-inst-btn">
-                <li><a href="#">mine</a></li>
-                <li><a href="#">all peasant mine</a></li>
-                <li><a href="#">build peasant</a></li>
-                <li><a href="#">attack</a></li>
-                <li><a href="#">defend</a></li>
+              <ul id="select-inst" class="dropdown-menu" aria-labelledby="select-inst-btn" style="font-family: monospace;">
+                <li><a href="#">mine&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; | 挖矿</a></li>
+                <li><a href="#">all peasant mine | 所有农民都去挖矿</a></li>
+                <li><a href="#">build peasant&ensp;&ensp;&ensp; | 造农民</a></li>
+                <li><a href="#">attack&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; | 进攻</a></li>
+                <li><a href="#">defend&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; | 防御</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">build a blacksmith</a></li>
-                <li><a href="#">build a barrack</a></li>
-                <li><a href="#">build a stable</a></li>
-                <li><a href="#">build a workshop</a></li>
-                <li><a href="#">build a guard tower</a></li>
-                <li><a href="#">build a town hall</a></li>
+                <li><a href="#">build a blacksmith&ensp; | 建造剑客兵营</a></li>
+                <li><a href="#">build a barrack&ensp;&ensp;&ensp;&ensp; | 建造枪兵兵营</a></li>
+                <li><a href="#">build a stable&ensp;&ensp;&ensp;&ensp;&ensp; | 建造骑兵兵营</a></li>
+                <li><a href="#">build a workshop&ensp;&ensp;&ensp; | 建造工房</a></li>
+                <li><a href="#">build a guard tower | 建造防御塔</a></li>
+                <li><a href="#">build a town hall&ensp;&ensp; | 建造城镇大厅</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">build swordman</a></li>
-                <li><a href="#">build spearman</a></li>
-                <li><a href="#">build cavalry</a></li>
-                <li><a href="#">build archer</a></li>
-                <li><a href="#">build dragon</a></li>
-                <li><a href="#">build catapult</a></li>
+                <li><a href="#">build swordman | 造剑客</a></li>
+                <li><a href="#">build spearman | 造枪兵</a></li>
+                <li><a href="#">build cavalry&ensp; | 造骑兵</a></li>
+                <li><a href="#">build archer&ensp;&ensp; | 造弓箭手</a></li>
+                <li><a href="#">build dragon&ensp;&ensp; | 造龙</a></li>
+                <li><a href="#">build catapult | 造投石车</a></li>
               </ul>
             </div>
             <textarea id="user-input-inst" class="form-control" row="2" placeholder="按下 enter 发送指令；不输入内容，直接按下 enter，可以重复上一条指令"></textarea>
@@ -58,7 +58,8 @@
         </form>
         <form>
           <div class="form-group">
-            <label for="cmd_history" style="font-size:20px">Log of past orders:</label>
+            <!-- <label for="cmd_history" style="font-size:20px">Log of past orders:</label> -->
+            <label for="cmd_history" style="font-size:20px">历史指令:</label>
             <textarea class="form-control" rows="5" style="font-size:16px;" id="cmd_history"></textarea>
           </div>
         </form>

@@ -36,7 +36,7 @@ function inst_input_init() {
     });
     $('#select-inst li').on('click', function () {
         let el = document.querySelector('#user-input-inst')
-        el.value = $(this).text();
+        el.value = $(this).text().split(' | ')[0].trimEnd();
         el.focus();
     });
     addEventListener('beforeunload', (e) => {
