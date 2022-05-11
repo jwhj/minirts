@@ -126,6 +126,7 @@ var make_spectator_intf = function() {
     }
     window.fow = !window.fow;
     document.querySelector('#fow').innerHTML = `Fog of war: ${window.fow ? 'ON' : 'OFF'}`
+    sendEmptyInst();
   };
 
   window.progress_range = document.createElement("INPUT");

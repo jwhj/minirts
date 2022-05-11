@@ -32,16 +32,12 @@ class ExecutorWrapper(nn.Module):
         self.cheat = cheat
         self.prev_inst = ''
 
-    def _get_human_instruction(self, batch, inst_from_frontend=None):
+    def _get_human_instruction(self, batch):
         assert_eq(batch['prev_inst'].size(0), 1)
         device = batch['prev_inst'].device
 
-        if inst_from_frontend is None:
-            inst = input('Please input your instruction\n')
-            # inst = 'build peasant'
-        else:
-            inst = inst_from_frontend.get()
-            print(f'Instruction from frontend: {inst}')
+        inst = input('Please input your instruction\n')
+        # inst = 'build peasant'
 
         inst_idx = torch.zeros((1,)).long().to(device)
         inst_idx[0] = self.executor.inst_dict.get_inst_idx(inst)
@@ -70,7 +66,7 @@ class ExecutorWrapper(nn.Module):
 
         return inst, inst_len, inst_cont.unsqueeze(1), reply
 
-    def forward(self, batch, inst_from_frontend=None):
+    def forward(self, batch, executor_bc=None):
         if self.coach is not None:
             assert not self.coach.training
             if self.cheat:
@@ -82,12 +78,17 @@ class ExecutorWrapper(nn.Module):
             inst, inst_len, inst_cont, coach_reply = self.coach.sample(
                 coach_input, word_based)
         else:
-            inst, inst_len, inst_cont, coach_reply = self._get_human_instruction(batch, inst_from_frontend)
+            inst, inst_len, inst_cont, coach_reply = self._get_human_instruction(batch)
+        
+        if inst_len.item() != 0 and executor_bc is not None:
+            executor = executor_bc
+        else:
+            executor = self.executor
 
-        assert not self.executor.training
-        executor_input = self.executor.format_executor_input(
+        assert not executor.training
+        executor_input = executor.format_executor_input(
             batch, inst, inst_len, inst_cont)
-        executor_reply = self.executor.compute_prob(executor_input)
+        executor_reply = executor.compute_prob(executor_input)
 
         reply = format_reply(batch, coach_reply, executor_reply)
         return reply
