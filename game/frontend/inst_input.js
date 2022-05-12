@@ -27,6 +27,12 @@ function sendEmptyInst() {
         })
     });
 }
+function sendHeartbeat(port) {
+    console.log(new Date());
+    fetch(`/heartbeat/${port}`).then(() => {
+        setTimeout(() => { sendHeartbeat(port) }, 2000);
+    }).catch(console.log);
+}
 function inst_input_init() {
     document.querySelector('#user-input-inst').addEventListener('keydown', ev => {
         if (ev.key == 'Enter') {
@@ -39,10 +45,10 @@ function inst_input_init() {
         el.value = $(this).text().split(' | ')[0].trimEnd();
         el.focus();
     });
+    sendHeartbeat(port);
     addEventListener('beforeunload', (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         fetch(`/stop_game/${port}`)
-        return e.returnValue = 'test';
     }, {
         capture: true
     });
