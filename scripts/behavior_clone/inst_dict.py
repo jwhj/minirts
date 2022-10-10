@@ -187,7 +187,10 @@ class InstructionDict:
             for token in ins:
                 if token == self.pad_word_idx:
                     break
-                lang.append(self._idx2word[token])
+                if token == self.unknown_word_idx:
+                    lang.append('<unk>')
+                else:
+                    lang.append(self._idx2word[token])
 
             sentence.append(' '.join(lang))
         return sentence
