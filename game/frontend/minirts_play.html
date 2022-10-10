@@ -19,12 +19,12 @@
           <div class="form-group">
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" id="select-inst-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择指令
+                Select Command
                 <span class="caret"></span>
               </button>
-              <button class="btn btn-default" type="button" onclick="sendEmptyInst()">发送空指令</button>
+              <button class="btn btn-default" type="button" onclick="sendEmptyInst()">Send empty instruction</button>
               <button class="btn btn-default" id="fow" type="button" onclick="toggle_fow()">
-                战争迷雾: 开
+                Fog of War: ON
               </button>
               <ul id="select-inst" class="dropdown-menu" aria-labelledby="select-inst-btn" style="font-family: monospace;">
                 <li><a href="#">mine&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; | 挖矿</a></li>
@@ -48,7 +48,7 @@
                 <li><a href="#">build catapult | 造投石车</a></li>
               </ul>
             </div>
-            <textarea id="user-input-inst" class="form-control" row="2" placeholder="按下 enter 发送指令；不输入内容，直接按下 enter，可以重复上一条指令"></textarea>
+            <textarea id="user-input-inst" class="form-control" row="2" placeholder="Press ENTER to issue a command. Pressing ENTER while leaving here empty repeats the previous command."></textarea>
             <label id="cmd_hint" style="font-size:16px; color:green; font-weight: bold;" >Please use your imagination to come up with creative orders and strategies. <br> If your partner takes ANY action you didn't order, use the orange button to warn them.</label>
             <label id="cmd_warn_label" style="font-weight: bold; font-size:16px; color:red; display: none;" >Your partner has marked that you are not following orders! Please only take actions <br> that you have been asked to do. Your task is to follow orders, not to win the game. <br> If you frequently do not follow orders, your work may be rejected!</label>
             <br>
@@ -59,7 +59,7 @@
         <form>
           <div class="form-group">
             <!-- <label for="cmd_history" style="font-size:20px">Log of past orders:</label> -->
-            <label for="cmd_history" style="font-size:20px">历史指令:</label>
+            <label for="cmd_history" style="font-size:20px">History Commands:</label>
             <textarea class="form-control" rows="5" style="font-size:16px;" id="cmd_history"></textarea>
           </div>
         </form>

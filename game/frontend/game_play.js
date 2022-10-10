@@ -125,7 +125,7 @@ var make_spectator_intf = function() {
       send_cmd(window.tick + ' C');
     }
     window.fow = !window.fow;
-    document.querySelector('#fow').innerHTML = `战争迷雾: ${window.fow ? '开' : '关'}`
+    document.querySelector('#fow').innerHTML = `Fog of War: ${window.fow ? 'ON' : 'OFF'}`
     sendEmptyInst();
   };
 
@@ -153,8 +153,8 @@ var make_spectator_intf = function() {
   window.cmd_input.style.resize = "none";
   window.cmd_input.disabled = "true";
 
-  // document.getElementById("cmd_input_label").innerHTML = "Current order to execute on:";
-  document.getElementById("cmd_input_label").innerHTML = "目前执行的指令:";
+  document.getElementById("cmd_input_label").innerHTML = "Current command to execute on:";
+  // document.getElementById("cmd_input_label").innerHTML = "目前执行的指令:";
   window.cmd_input.style.color = "red";
 
   window.cmd_history = document.getElementById("cmd_history");
@@ -372,8 +372,8 @@ var make_player_intf = function() {
 
   document.getElementById("cmd_hint").style.display = "none";
 
-  // document.getElementById("cmd_input_label").innerHTML = "Current order to execute on:";
-  document.getElementById("cmd_input_label").innerHTML = "目前执行的指令:";
+  document.getElementById("cmd_input_label").innerHTML = "Current command to execute on:";
+  // document.getElementById("cmd_input_label").innerHTML = "目前执行的指令:";
   window.cmd_input.style.color = "red";
 
   window.cmd_history = document.getElementById("cmd_history");
